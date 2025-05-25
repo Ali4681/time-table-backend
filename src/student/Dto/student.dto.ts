@@ -1,7 +1,7 @@
 import { IsString, IsNotEmpty, IsArray, IsPhoneNumber } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateStudentDto {
+export class StudentDto {
   @ApiProperty({ example: 'John Doe' })
   @IsString()
   @IsNotEmpty()
@@ -16,8 +16,5 @@ export class CreateStudentDto {
   @IsPhoneNumber()
   phoneNumber: string;
 
-  @ApiProperty({ example: ['CS101', 'MATH202'], type: [String] })
-  @IsArray()
-  @IsString({ each: true })
-  modules?: string[];
+
 }

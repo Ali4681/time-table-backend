@@ -7,6 +7,9 @@ import { HoursType, HoursTypeSchema } from 'src/hours/hours.schema';
 import { DocHourSchema, DocHourType } from './doc-hour.schema';
 import { DocTeachController } from './docteach.controller';
 
+
+
+
 @Module({
   imports: [
     MongooseModule.forFeature([

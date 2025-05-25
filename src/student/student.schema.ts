@@ -21,4 +21,3 @@ export class StudentType extends Document {
 }
 
 export const StudentTypeSchema = SchemaFactory.createForClass(StudentType);
-export type StudentDocument = StudentType & Document;

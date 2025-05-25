@@ -8,7 +8,7 @@ import {
   ArrayMinSize,
 } from 'class-validator';
 
-export class CreateModuleDto {
+export class ModuleDto {
   @IsString()
   @IsNotEmpty()
   name: string;

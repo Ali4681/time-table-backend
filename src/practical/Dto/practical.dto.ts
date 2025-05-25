@@ -1,6 +1,6 @@
 import { IsString, IsNotEmpty, IsNumber, Min } from 'class-validator';
 
-export class CreatePracticalDto {
+export class PracticalDto {
   @IsString()
   @IsNotEmpty()
   theoretical: string;
