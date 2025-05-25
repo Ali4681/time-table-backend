@@ -1,6 +1,6 @@
 import { IsString, IsArray, IsBoolean, IsOptional } from 'class-validator';
 
-export class CreateDocTeachDto {
+export class DocTeachDto {
   @IsString()
   id: string;
 
@@ -10,7 +10,7 @@ export class CreateDocTeachDto {
   @IsArray()
   @IsString({ each: true })
   @IsOptional()
-  availableAt?: string[];
+  hourIds?: string[];
 
   @IsBoolean()
   @IsOptional()
