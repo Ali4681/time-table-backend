@@ -20,7 +20,7 @@ export class RoomType extends Document {
     type: [String],
     default: [],
   })
-  modules: string[];
+  modulesId: string[];
 }
 
 export const RoomTypeSchema = SchemaFactory.createForClass(RoomType);
