@@ -7,7 +7,6 @@ export class TheoreticalType extends Document {
     required: true,
     uppercase: true,
     trim: true,
-    match: /^[A-Z]{2,5}$/,
   })
   categoryCode: string;
 
@@ -21,4 +20,3 @@ export class TheoreticalType extends Document {
 
 export const TheoreticalTypeSchema =
   SchemaFactory.createForClass(TheoreticalType);
-export type TheoreticaleDocument = TheoreticalType & Document;

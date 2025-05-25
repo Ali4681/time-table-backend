@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { DocTeachService } from './docteach.service';
-import { DocTeachController } from './doc-teach.controller';
+import { DocTeachController } from './docteach.controller';
+
 
 @Module({
   controllers: [DocTeachController],

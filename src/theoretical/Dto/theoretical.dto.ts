@@ -7,12 +7,10 @@ import {
   Matches,
 } from 'class-validator';
 
-export class CreateTheoreticalDto {
+export class TheoreticalDto {
   @IsString()
   @IsNotEmpty()
-  @Matches(/^[A-Z]{2,5}$/, {
-    message: 'Category code must be 2-5 uppercase letters',
-  })
+ 
   categoryCode: string;
 
   @IsNumber()
