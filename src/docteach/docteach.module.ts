@@ -1,10 +1,11 @@
 // docteach.module.ts
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { DocTeachController } from './docteach.controller';
 import { DocTeachType, DocTeachTypeSchema } from './docteach.schema';
 import { DocTeachService } from './docteach.service';
-import { DocTeachController } from './doc-teach.controller';
+import { HoursType, HoursTypeSchema } from 'src/hours/hours.schema';
+import { DocHourSchema, DocHourType } from './doc-hour.schema';
+import { DocTeachController } from './docteach.controller';
 
 @Module({
   imports: [
