@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, ObjectId } from 'mongoose';
+import { Document, ObjectId, Types } from 'mongoose';
 
 @Schema()
 export class ModulesType extends Document {
@@ -15,12 +15,14 @@ export class ModulesType extends Document {
   @Prop({ required: true, min: 1 })
   hours: number;
 
-  @Prop({ required: true, trim: true, ref: 'DocTeachType' })
-  doctorsId: ObjectId | string;
+  @Prop({
+    type: Types.ObjectId,
+    ref: 'DocTeachType' /*,required: true */
+  })
+  doctorsId: Types.ObjectId;
 
-  @Prop({ required: true, trim: true, ref: 'DocTeachType' })
-  teacherId: ObjectId | string;
+  @Prop({ type: Types.ObjectId, ref: 'DocTeachType' /*,required: true */ })
+  teacherId: Types.ObjectId;
 }
 
 export const ModulesTypeSchema = SchemaFactory.createForClass(ModulesType);
-export type ModulesDocument = ModulesType & Document;
