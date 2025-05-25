@@ -1,9 +1,9 @@
 import { IsString, IsNotEmpty } from 'class-validator';
 
-export class CreateHoursDto {
+export class HoursDto {
   @IsString()
   @IsNotEmpty()
-  daysID: string;
+  daysId: string;
 
   @IsString()
   @IsNotEmpty()

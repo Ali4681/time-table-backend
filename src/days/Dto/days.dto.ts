@@ -1,6 +1,6 @@
 import { IsString, IsNotEmpty, IsIn } from 'class-validator';
 
-export class CreateDayDto {
+export class DayDto {
   @IsString()
   @IsNotEmpty()
   @IsIn(['Monday', 'Tuesday', 'Wednesday', 'Friday', 'Saturday', 'Sunday'], {

@@ -13,4 +13,3 @@ export class DaysType extends Document {
 }
 
 export const DaysTypeSchema = SchemaFactory.createForClass(DaysType);
-export type DaysDocument = DaysType & Document;
