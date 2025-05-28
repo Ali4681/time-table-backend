@@ -19,11 +19,16 @@ export class ModuleController {
   }
   @Get(':moduleId/students')
   async getStudentsByModule(@Param('moduleId') moduleId: string) {
-    return this.moduleService.getStudentsByModule(moduleId);}
+    return this.moduleService.getStudentsByModule(moduleId);
+  }
 
   @Get(':id')
   findById(@Param('id') id: string) {
     return this.moduleService.findById(id);
+  }
+  @Get(':id/all')
+  findAllmoduleandpractica(@Param('id') id: string) {
+    return this.moduleService.findAllmoduleandpractica(id);
   }
 
   @Post()

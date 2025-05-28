@@ -37,12 +37,12 @@ export class StudentService {
   async registerToModule(
     student: string,
     module: string,
-    practical?: string,
+    practical: string,
   ) {
     return this.studentModuleService.create({
       student: new Types.ObjectId(student),
       module: new Types.ObjectId(module),
-      practical: practical? new Types.ObjectId(practical) : undefined,
+      Practical: new Types.ObjectId(practical),
     });
   }
 

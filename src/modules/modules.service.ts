@@ -5,6 +5,7 @@ import { ModulesType } from './modules.schema';
 import {
   StudentModuleType} from 'src/studentmodule/studentmodule.schema';
 import { ModuleDto } from './Dto/modules.dto';
+import { StudentModuleTypeService } from 'src/studentmodule/studentmodule.service';
 
 @Injectable()
 export class ModuleService {
@@ -13,6 +14,7 @@ export class ModuleService {
     private readonly moduleModel: Model<ModulesType>,
     @InjectModel(StudentModuleType.name)
     private readonly studentmoduleModel: Model<StudentModuleType>,
+    private readonly studentModuleService: StudentModuleTypeService,
   ) {}
 
   async create(data: ModuleDto) {
@@ -24,12 +26,18 @@ export class ModuleService {
   }
   /////
   async getStudentsByModule(moduleId: string) {
-    const objectId = new Types.ObjectId(moduleId);
-    return this.studentmoduleModel
-      .find({ module: objectId })
-      .populate('student') // يعيد بيانات الطالب كاملة
-      .populate('module') // إذا كنت تحتاج بيانات المادة
-      .exec();
+    // return this.studentmoduleModel
+    //   .find({ module: objectId })
+    //   .populate('student') // يعيد بيانات الطالب كاملة
+    //   .populate('module') // إذا كنت تحتاج بيانات المادة
+    //   .exec();
+
+    return this.studentModuleService.findByModule(moduleId);
+  }
+
+  findAllmoduleandpractica(id:string){
+    return this.studentModuleService.findAllmoduleandpractica(id)
+
   }
 
   /////

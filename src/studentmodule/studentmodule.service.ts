@@ -13,7 +13,7 @@ export class StudentModuleTypeService {
   async create(data: {
     student: Types.ObjectId;
     module: Types.ObjectId;
-    practical?: Types.ObjectId;
+    Practical: Types.ObjectId;
   }) {
     return this.model.create({
       ...data,
@@ -21,8 +21,17 @@ export class StudentModuleTypeService {
     });
   }
 
-  async findAll() {
-    return this.model.find().populate('student module practical');
+  async findAllmoduleandpractica(studentId:string) {
+
+    const ObjectId = new Types.ObjectId(studentId);
+
+
+    const array= await this.model.find({ student: ObjectId }).populate('student Practical module');
+
+
+    return{
+      moduleAndHisPractical:array
+    }
   }
 
   async findById(id: string) {
@@ -38,10 +47,44 @@ export class StudentModuleTypeService {
   }
 
   async findByStudent(studentId: string) {
-
     const ObjectId = new Types.ObjectId(studentId);
+    const registrations = await this.model
+      .find({ student: ObjectId })
+      .populate('module');
 
-    return this.model.find({ student: ObjectId }).populate('module');
+    // Transform the response
+    if (registrations.length === 0) {
+      return null;
+    }
+
+    return {
+      student: studentId,
+      modules: registrations.map((reg) => ({
+        module: reg.module,
+        registrationDate: reg.registrationDate,
+        registrationId: reg._id,
+      })),
+    };
+  }
+  async findByModule(moduleId: string) {
+    const ObjectId = new Types.ObjectId(moduleId);
+    const registrations = await this.model
+      .find({ module: ObjectId })
+      .populate('student');
+
+    // Transform the response
+    if (registrations.length === 0) {
+      return null;
+    }
+
+    return {
+      module: moduleId,
+      students: registrations.map((reg) => ({
+        student: reg.student,
+        registrationDate: reg.registrationDate,
+        registrationId: reg._id,
+      })),
+    };
   }
 
   async deleteByStudentAndModule(studentId: string, moduleId: string) {
