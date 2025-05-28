@@ -42,7 +42,7 @@ export class StudentController {
   @Post(':id/register')
   registerToModule(
     @Param('id') studentId: string,
-    @Body() body: { moduleId: string; practicalId?: string },
+    @Body() body: { moduleId: string; practicalId: string },
   ) {
     return this.studentService.registerToModule(
       studentId,

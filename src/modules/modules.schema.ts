@@ -17,11 +17,11 @@ export class ModulesType extends Document {
 
   @Prop({
     type: Types.ObjectId,
-    ref: 'DocTeachType' /*,required: true */
+    ref: 'DocTeachType' ,required: true 
   })
   doctorsId: Types.ObjectId;
 
-  @Prop({ type: Types.ObjectId, ref: 'DocTeachType' /*,required: true */ })
+  @Prop({ type: Types.ObjectId, ref: 'DocTeachType' ,required: true  })
   teacherId: Types.ObjectId;
 }
 
