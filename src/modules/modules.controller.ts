@@ -26,6 +26,10 @@ export class ModuleController {
   findById(@Param('id') id: string) {
     return this.moduleService.findById(id);
   }
+  @Get(':id/withInfo')
+  findAllModuleWithDoctorATeacher(@Param('id') id: string) {
+    return this.moduleService.findModuleWithDoctorATeacher(id);
+  }
   @Get(':id/all')
   findAllmoduleandpractica(@Param('id') id: string) {
     return this.moduleService.findAllmoduleandpractica(id);

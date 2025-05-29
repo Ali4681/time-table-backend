@@ -35,9 +35,8 @@ export class ModuleService {
     return this.studentModuleService.findByModule(moduleId);
   }
 
-  findAllmoduleandpractica(id:string){
-    return this.studentModuleService.findAllmoduleandpractica(id)
-
+  findAllmoduleandpractica(id: string) {
+    return this.studentModuleService.findAllmoduleandpractica(id);
   }
 
   /////
@@ -52,5 +51,23 @@ export class ModuleService {
 
   async delete(id: string) {
     return this.moduleModel.findByIdAndDelete(id);
+  }
+  async findModuleWithDoctorATeacher(id: string) {
+    const module = await this.moduleModel
+      .findById(id) 
+      .populate('doctorsId teacherId')
+      .exec(); 
+
+    if (!module) {
+      throw new Error('Module not found'); // Handle case where module doesn't exist
+    }
+
+    return {
+      module: {
+        module_id: module._id,
+        doctor: module.doctorsId,
+        teacher: module.teacherId,
+      },
+    };
   }
 }
