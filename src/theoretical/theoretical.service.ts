@@ -4,7 +4,6 @@ import { Model } from 'mongoose';
 import { TheoreticalType } from './theoretical.schema';
 import { TheoreticalDto } from './Dto/theoretical.dto';
 
-
 @Injectable()
 export class TheoreticalService {
   constructor(
@@ -16,18 +15,19 @@ export class TheoreticalService {
     return await this.model.create(dto);
   }
 
-  async findAll(){
-    const theoretical = await this.model.aggregate([
-      {
-        $lookup: {
-          from: 'practicaltypes', // اسم الـ collection للدروس (يجب أن يكون الاسم الصحيح في MongoDB)
-          localField: '_id', // من course
-          foreignField: 'theoretical', // من lesson
-          as: 'practical', // النتيجة تُخزن في هذا الحقل
+  async findAll() {
+    const theoretical = await this.model
+      .aggregate([
+        {
+          $lookup: {
+            from: 'practicaltypes', // اسم الـ collection للدروس (يجب أن يكون الاسم الصحيح في MongoDB)
+            localField: '_id', // من course
+            foreignField: 'theoretical', // من lesson
+            as: 'practical', // النتيجة تُخزن في هذا الحقل
+          },
         },
-      },
-    ]);
-
+      ])
+      .exec();
 
     return theoretical;
   }

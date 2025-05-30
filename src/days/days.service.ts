@@ -21,11 +21,31 @@ export class DaysService {
     }
     return this.dayModel.create(createDayDto);
   }
-
   async findAll(): Promise<DaysType[]> {
-    return this.dayModel.find().exec();
+    return this.dayModel
+      .aggregate([
+        {
+          $lookup: {
+            from: 'hourstypes',
+            let: { dayId: '$_id' }, // Store the day's _id as a variable
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $eq: [
+                      '$daysId',
+                      { $toObjectId: '$$dayId' }, // Convert to ObjectId explicitly
+                    ],
+                  },
+                },
+              },
+            ],
+            as: 'hourDay',
+          },
+        },
+      ])
+      .exec();
   }
-
 
   async update(id: string, updateDayDto: DayDto): Promise<DaysType> {
     const updated = await this.dayModel.findByIdAndUpdate(id, updateDayDto, {
