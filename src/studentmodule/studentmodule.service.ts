@@ -21,21 +21,26 @@ export class StudentModuleTypeService {
     });
   }
 
-  async findAllmoduleandpractica(studentId:string) {
-
+  async findAllmoduleandpractica(studentId: string) {
     const ObjectId = new Types.ObjectId(studentId);
 
+    const array = await this.model
+      .find({ student: ObjectId })
+      .populate('student')
+      .populate('Practical')
+      .populate('module');
 
-    const array= await this.model.find({ student: ObjectId }).populate('student Practical module');
-
-
-    return{
-      moduleAndHisPractical:array
-    }
+    return {
+      moduleAndHisPractical: array,
+    };
   }
 
   async findById(id: string) {
-    return this.model.findById(id).populate('student module practical');
+    return this.model
+      .findById(id)
+      .populate('student')
+      .populate('Practical')
+      .populate('module');
   }
 
   async update(id: string, data: Partial<StudentModuleType>) {

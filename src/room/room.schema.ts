@@ -16,11 +16,7 @@ export class RoomType extends Document {
   })
   capacity: number;
 
-  @Prop({
-    type: [String],
-    default: [],
-  })
-  modulesId: string[];
+
 }
 
 export const RoomTypeSchema = SchemaFactory.createForClass(RoomType);

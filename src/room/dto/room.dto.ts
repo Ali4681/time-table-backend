@@ -16,8 +16,5 @@ export class RoomDto {
   @Min(1)
   capacity: number;
 
-  @IsArray()
-  @IsString({ each: true })
-  @IsOptional()
-  modules?: string[];
+
 }
