@@ -2,8 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { ModulesType } from './modules.schema';
-import {
-  StudentModuleType} from 'src/studentmodule/studentmodule.schema';
+import { StudentModuleType } from 'src/studentmodule/studentmodule.schema';
 import { ModuleDto } from './Dto/modules.dto';
 import { StudentModuleTypeService } from 'src/studentmodule/studentmodule.service';
 
@@ -18,7 +17,15 @@ export class ModuleService {
   ) {}
 
   async create(data: ModuleDto) {
-    return this.moduleModel.create(data);
+    const create = new this.moduleModel({
+      name: data.name,
+      code: data.code,
+      doctorsId: new Types.ObjectId(data.doctors),
+      hours: data.hours,
+      teacherId: new Types.ObjectId(data.teacher),
+      years: data.years,
+    });
+    return create.save();
   }
 
   async findAll() {
@@ -54,9 +61,9 @@ export class ModuleService {
   }
   async findModuleWithDoctorATeacher(id: string) {
     const module = await this.moduleModel
-      .findById(id) 
+      .findById(id)
       .populate('doctorsId teacherId')
-      .exec(); 
+      .exec();
 
     if (!module) {
       throw new Error('Module not found'); // Handle case where module doesn't exist
