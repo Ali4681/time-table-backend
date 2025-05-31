@@ -33,12 +33,7 @@ export class ModuleService {
   }
   /////
   async getStudentsByModule(moduleId: string) {
-    // return this.studentmoduleModel
-    //   .find({ module: objectId })
-    //   .populate('student') // يعيد بيانات الطالب كاملة
-    //   .populate('module') // إذا كنت تحتاج بيانات المادة
-    //   .exec();
-
+ 
     return this.studentModuleService.findByModule(moduleId);
   }
 
