@@ -5,6 +5,7 @@ import { DocTeachType } from './docteach.schema';
 import { DocTeachDto } from './Dto/docteach.dto';
 import { HoursType } from 'src/hours/hours.schema';
 import { DocHourType } from './doc-hour.schema';
+import { DaysType } from 'src/days/days.schema';
 
 @Injectable()
 export class DocTeachService {
@@ -24,7 +25,7 @@ export class DocTeachService {
         hourIds.map((id) =>
           new this.docHourModel({
             docId: newDoc._id,
-            hourId: id,
+            hourId: new Types.ObjectId(id),
           }).save(),
         ),
       );
@@ -34,23 +35,32 @@ export class DocTeachService {
   }
 
   async findAll() {
-    const docs = await this.modeldoc.find().exec();
-    const results = await Promise.all(
-      docs.map(async (doc) => {
-        const docHours = await this.docHourModel
-          .find({ docId: doc._id })
-          .populate('hourId') // populate ساعات
-          .exec();
+    const docHours = await this.docHourModel
+      .find()
+      .populate({
+        path: 'hourId',
+        populate: {
+          path: 'daysId',
+          model: DaysType.name, // Use the actual model name here
+        },
+      })
+      .populate('docId')
+      .exec();
 
-        const hours = docHours.map((dh) => dh.hourId); // استخرج الساعات فقط
-
-        return {
-          ...doc.toObject(),
-          hours, // أضف الساعات للنتيجة
+    // Group hours by doctor ID
+    const groupedResults = docHours.reduce((acc, docHour) => {
+      const doctorId = docHour.docId._id.toString();
+      if (!acc[doctorId]) {
+        acc[doctorId] = {
+          doctor: docHour.docId,
+          hours: [],
         };
-      }),
-    );
-    return results;
+      }
+      acc[doctorId].hours.push(docHour.hourId);
+      return acc;
+    }, {});
+
+    return Object.values(groupedResults);
   }
 
   async findOne(id: string) {
@@ -77,14 +87,16 @@ export class DocTeachService {
       })
       .exec();
     if (!updated) throw new NotFoundException('DocTeach not found');
-    return updated;
+
+    const response = await this.docHourModel.find().populate('hourId docId');
+    return response;
   }
 
   async remove(id: string) {
     const deleted = await this.modeldoc.findByIdAndDelete(id).exec();
     if (!deleted) throw new NotFoundException('DocTeach not found');
 
-    await this.docHourModel.deleteMany({ docId: id }).exec(); // امسح العلاقات أيضاً
+    await this.docHourModel.deleteMany({ docId: id }).exec();
     return deleted;
   }
 }

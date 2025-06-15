@@ -16,7 +16,7 @@ export class ModuleDto {
   @IsArray()
   @ArrayMinSize(1)
   @IsInt({ each: true })
-  years: number[];
+  years: string;
 
   @IsString()
   @IsNotEmpty()
@@ -24,11 +24,14 @@ export class ModuleDto {
 
   @IsNumber()
   @Min(1)
-  hours: number;
+  hours: string;
 
   @IsString()
   @IsNotEmpty()
   doctors: string;
+  
+  @IsNumber()
+  erolledStudents: number;
 
   @IsString()
   @IsNotEmpty()

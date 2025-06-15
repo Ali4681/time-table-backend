@@ -10,7 +10,7 @@ import {
 import { HoursService } from './hours.service';
 import { HoursDto } from './Dto/hours.dto';
 
-@Controller('hours')
+@Controller('hours')  
 export class HoursController {
   constructor(private readonly hoursService: HoursService) {}
 

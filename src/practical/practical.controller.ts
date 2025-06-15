@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { PracticalService } from './practical.service';
 import { PracticalDto } from './Dto/practical.dto';
 import { ModulePracticalService } from 'src/modulepractical/modulePractical.service';

@@ -20,20 +20,26 @@ export class ModuleService {
     const create = new this.moduleModel({
       name: data.name,
       code: data.code,
-      doctorsId: new Types.ObjectId(data.doctors),
+      doctorsId: new Types.ObjectId(data.doctors), // ✔️ String واحد
       hours: data.hours,
-      teacherId: new Types.ObjectId(data.teacher),
-      years: data.years,
+      teacherId: new Types.ObjectId(data.teacher), // ✔️ String واحد
+      years: data.years, // ✔️ Array of numbers (مثل [1, 2, 3])
+      erolledStudents: data.erolledStudents,
     });
-    return create.save();
+    const module2 = await create.save();
+
+    // populate doctorsId and teacherId with DocTeachType
+    const module = await this.moduleModel
+      .findById(module2._id)
+      .populate('doctorsId teacherId');
+    return module;
   }
 
   async findAll() {
-    return this.moduleModel.find();
+    return this.moduleModel.find().populate('doctorsId teacherId');
   }
   /////
   async getStudentsByModule(moduleId: string) {
- 
     return this.studentModuleService.findByModule(moduleId);
   }
 
@@ -48,7 +54,11 @@ export class ModuleService {
   }
 
   async update(id: string, data: ModuleDto) {
-    return this.moduleModel.findByIdAndUpdate(id, data, { new: true });
+    return this.moduleModel
+      .findByIdAndUpdate(id, data, { new: true })
+      .populate('doctorsId teacherId')
+      .lean()
+      .exec();
   }
 
   async delete(id: string) {

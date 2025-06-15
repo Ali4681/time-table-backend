@@ -28,7 +28,9 @@ export class HoursService {
   }
 
   async findAll(): Promise<HoursType[]> {
-    return this.hoursModel.find().populate('daysId').exec();
+    const hours = await this.hoursModel.find().populate('daysId').exec();
+
+    return hours;
   }
 
   async update(id: string, updateHoursDto: HoursDto): Promise<HoursType> {

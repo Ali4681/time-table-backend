@@ -20,7 +20,7 @@ export class PracticalService {
   }
 
   async findAll(): Promise<PracticalType[]> {
-    return this.model.find().exec();
+    return this.model.find().populate('theoretical').exec();
   }
 
   async findOne(id: string): Promise<PracticalType> {
@@ -33,7 +33,8 @@ export class PracticalService {
 
   async update(id: string, dto: PracticalDto): Promise<PracticalType> {
     const updated = await this.model
-      .findByIdAndUpdate(id, dto, { new: true }).exec();
+      .findByIdAndUpdate(id, dto, { new: true })
+      .exec();
 
     if (!updated)
       throw new NotFoundException(`PracticalType with ID ${id} not found`);

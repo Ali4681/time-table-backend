@@ -1,10 +1,8 @@
 import {
-  IsString,
   IsNotEmpty,
   IsNumber,
-  Min,
-  IsArray,
-  IsOptional,
+  IsString,
+  Min
 } from 'class-validator';
 
 export class RoomDto {
