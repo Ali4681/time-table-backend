@@ -11,4 +11,3 @@ export class DocHourType extends Document {
 }
 
 export const DocHourSchema = SchemaFactory.createForClass(DocHourType);
-  

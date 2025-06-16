@@ -6,7 +6,7 @@ async function bootstrap() {
 
   // 👇 Add this line to fix fetch issues from your frontend
   app.enableCors({
-    origin: 'http://localhost:3000', // frontend URL
+    origin: '*', // frontend URL
     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
     credentials: true,
   });

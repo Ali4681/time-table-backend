@@ -26,7 +26,7 @@ export class StudentService {
   }
 
   async update(id: string, data: StudentDto) {
-    return this.studentModel.findByIdAndUpdate(id, data, { new: true });
+    return this.studentModel.findByIdAndUpdate(id, data, { new: true }).exec();
   }
 
   async delete(id: string) {
@@ -34,11 +34,7 @@ export class StudentService {
   }
 
   // ✅ تسجيل الطالب في مادة
-  async registerToModule(
-    student: string,
-    module: string,
-    practical: string,
-  ) {
+  async registerToModule(student: string, module: string, practical: string) {
     return this.studentModuleService.create({
       student: new Types.ObjectId(student),
       module: new Types.ObjectId(module),
