@@ -15,9 +15,11 @@ export class RoomType extends Document {
     min: 1,
   })
   capacity: number;
-
-
+  @Prop({
+    required: true,
+    default:true
+  })
+  theoretical: boolean;
 }
 
 export const RoomTypeSchema = SchemaFactory.createForClass(RoomType);
-export type RoomeDocument = RoomType & Document;

@@ -14,8 +14,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 @Module({
   imports: [
     MongooseModule.forRoot( 
-      'mongodb://localhost/time-table',
-      // 'mongodb+srv://ali468:aaa123aaa@cluster0.dsejjf7.mongodb.net/time-table',
+      //'mongodb://localhost/time-table',
+       'mongodb+srv://ali468:aaa123aaa@cluster0.dsejjf7.mongodb.net/time-table',
     ),
     DocTeachModule,
     HoursModule,

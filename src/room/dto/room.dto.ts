@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsNotEmpty,
   IsNumber,
   IsString,
@@ -14,5 +15,7 @@ export class RoomDto {
   @Min(1)
   capacity: number;
 
-
+  //@IsString()
+  @IsBoolean()
+  theoretical: boolean;
 }

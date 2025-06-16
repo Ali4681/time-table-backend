@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { RoomService } from './room.service';
 import { RoomDto } from './dto/room.dto';
+import { generate } from 'rxjs';
 
 @Controller('room')
 export class RoomController {
@@ -25,6 +26,12 @@ export class RoomController {
     return this.roomService.findAll();
   }
 
+////////////
+  @Get('infogenerate')
+  infogenrate() {
+    return this.roomService.infogenrate();
+  }
+///////////////////////////////
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.roomService.findOne(id);
