@@ -1,16 +1,15 @@
 // room.controller.ts
 import {
-  Controller,
-  Get,
-  Post,
   Body,
+  Controller,
+  Delete,
+  Get,
   Param,
   Patch,
-  Delete,
+  Post,
 } from '@nestjs/common';
-import { RoomService } from './room.service';
 import { RoomDto } from './dto/room.dto';
-import { generate } from 'rxjs';
+import { RoomService } from './room.service';
 
 @Controller('room')
 export class RoomController {

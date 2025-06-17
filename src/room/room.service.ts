@@ -90,7 +90,9 @@ export class RoomService {
 
     const teacherList = await Promise.all(
       teachers.map(async (t) => {
-        const docHours = await this.DocHourModel.find({ docId: t._id }).lean().exec();
+        const docHours = await this.DocHourModel.find({ docId: t._id })
+          .lean()
+          .exec();
 
         const availability = {}; // لتجميع الأيام والفترات الزمنية
         for (const day of schedule_parameters.days) {
@@ -104,12 +106,14 @@ export class RoomService {
         for (const docHour of docHours) {
           const hourData = await this.hourModel
             .findOne({ _id: docHour.hourId })
-            .lean().exec();
+            .lean()
+            .exec();
           if (!hourData || !hourData.daysId) continue;
 
           const dayData = await this.daysModel
             .findOne({ _id: hourData.daysId })
-            .lean().exec();
+            .lean()
+            .exec();
           if (!dayData) continue;
 
           const dayName = dayData.name.toString(); // مثل "Monday"
@@ -122,7 +126,6 @@ export class RoomService {
             availability[dayName][timeSlot] = true;
           }
         }
-        
 
         return {
           teacher_id: t._id,
@@ -136,13 +139,16 @@ export class RoomService {
       students.map(async (s) => {
         const enrolledModules = await this.StudentModuleModel.find({
           student: s._id,
-        }).lean().exec();
+        })
+          .lean()
+          .exec();
 
         const moduleIds = enrolledModules.map((em) => em.module); // هذا ObjectId[]
 
         const modules = await this.moduleModel
           .find({ _id: { $in: moduleIds } })
-          .lean().exec();
+          .lean()
+          .exec();
 
         const moduleLists = modules.map((m) => m.code);
 
