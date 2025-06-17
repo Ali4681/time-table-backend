@@ -18,6 +18,8 @@ export class StudentType extends Document {
   })
   @Prop({ required: true, unique: true })
   phoneNumber: string;
+
+  
 }
 
 export const StudentTypeSchema = SchemaFactory.createForClass(StudentType);

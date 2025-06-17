@@ -7,7 +7,7 @@ export class StudentModuleType extends Document {
   student: ObjectId;
   @Prop({ type: Types.ObjectId, ref: 'ModulesType' })
   module: ObjectId;
-  @Prop()
+  @Prop({default:new Date()})
   registrationDate: Date;
   @Prop({ type: Types.ObjectId, ref: 'PracticalType' })
   Practical: ObjectId;

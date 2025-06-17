@@ -4,17 +4,50 @@ import { Model, Types } from 'mongoose';
 import { StudentType } from './student.schema';
 import { StudentModuleTypeService } from '../studentmodule/studentmodule.service';
 import { StudentDto } from './Dto/student.dto';
+import { StudentModuleType } from 'src/studentmodule/studentmodule.schema';
 
 @Injectable()
 export class StudentService {
   constructor(
     @InjectModel(StudentType.name)
     private readonly studentModel: Model<StudentType>,
+    @InjectModel(StudentModuleType.name)
+    private readonly studentModuleModel: Model<StudentModuleType>,
     private readonly studentModuleService: StudentModuleTypeService,
   ) {}
-
   async findAll() {
-    return this.studentModel.find();
+    const students = await this.studentModel.find().lean();
+
+    const studentModules = await this.studentModuleModel
+      .find()
+      .populate('student module')
+      .lean();
+
+    const modulesMap = new Map<string, any[]>();
+
+    for (const mod of studentModules) {
+      // @ts-ignore
+      const studentId = mod.student._id.toString();
+
+      // Remove the `student` field to avoid duplication
+      const { student, ...moduleWithoutStudent } = mod;
+
+      if (!modulesMap.has(studentId)) {
+        modulesMap.set(studentId, []);
+      }
+
+      modulesMap.get(studentId)?.push(moduleWithoutStudent);
+    }
+
+    const result = students.map((student) => {
+      const studentId = student._id.toString();
+      return {
+        ...student,
+        modules: modulesMap.get(studentId) || [],
+      };
+    });
+
+    return result;
   }
 
   async findById(id: string) {
@@ -22,7 +55,24 @@ export class StudentService {
   }
 
   async create(data: StudentDto) {
-    return this.studentModel.create(data);
+    const { modules, ...studentData } = data;
+
+    // Create and save the student
+    const student = new this.studentModel(studentData);
+    await student.save();
+
+    // Create and save all modules
+    const modulePromises = modules.map((moduleId) => {
+      this.studentModuleService.create({
+        student: student._id + '',
+        module: new Types.ObjectId(moduleId + ''),
+        Practical: new Types.ObjectId(''),
+      });
+    });
+
+    await Promise.all(modulePromises);
+
+    return student; // Return the created student
   }
 
   async update(id: string, data: StudentDto) {

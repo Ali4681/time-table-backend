@@ -3,8 +3,12 @@ import { StudentService } from './student.service';
 import { StudentController } from './student.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { StudentType, StudentTypeSchema } from './student.schema';
-import { StudentModuleType, StudentModuleTypeSchema } from 'src/studentmodule/studentmodule.schema';
+import {
+  StudentModuleType,
+  StudentModuleTypeSchema,
+} from 'src/studentmodule/studentmodule.schema';
 import { StudentModuleTypeModule } from 'src/studentmodule/studentmodule.module';
+import { StudentModuleTypeService } from 'src/studentmodule/studentmodule.service';
 
 @Module({
   imports: [
@@ -15,6 +19,6 @@ import { StudentModuleTypeModule } from 'src/studentmodule/studentmodule.module'
     StudentModuleTypeModule,
   ],
   controllers: [StudentController],
-  providers: [StudentService],
+  providers: [StudentService,StudentModuleTypeService],
 })
 export class StudentModule {}

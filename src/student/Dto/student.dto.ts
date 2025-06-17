@@ -15,4 +15,8 @@ export class StudentDto {
   @ApiProperty({ example: '+1234567890' })
   @IsPhoneNumber()
   phoneNumber: string;
+
+
+  @IsArray()
+  modules:string[];
 }
