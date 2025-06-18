@@ -61,10 +61,12 @@ export class StudentService {
     const student = new this.studentModel(studentData);
     await student.save();
 
+    const x = new Types.ObjectId(student._id+'')
     // Create and save all modules
+
     const modulePromises = modules.map((moduleId) => {
       this.studentModuleService.create({
-        student: student._id + '',
+        student:x,
         module: new Types.ObjectId(moduleId + ''),
         Practical: new Types.ObjectId(''),
       });
