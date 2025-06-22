@@ -10,7 +10,7 @@ export class StudentModuleType extends Document {
   @Prop({default:new Date()})
   registrationDate: Date;
   @Prop({ type: Types.ObjectId, ref: 'PracticalType' })
-  Practical: ObjectId;
+  Practical?: ObjectId;
 }
 
 export const StudentModuleTypeSchema = SchemaFactory.createForClass(StudentModuleType);

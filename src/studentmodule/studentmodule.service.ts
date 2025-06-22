@@ -13,8 +13,17 @@ export class StudentModuleTypeService {
   async create(data: {
     student: Types.ObjectId;
     module: Types.ObjectId;
-    Practical: Types.ObjectId;
+    Practical?: Types.ObjectId;
   }) {
+    const existing = await this.model.findOne({
+      student: data.student,
+      module: data.module,
+    });
+
+    if (existing) {
+      throw new Error('Student is already registered in this module');
+    }
+
     return this.model.create({
       ...data,
       registrationDate: new Date(),

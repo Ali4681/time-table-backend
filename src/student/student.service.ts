@@ -26,11 +26,16 @@ export class StudentService {
     const modulesMap = new Map<string, any[]>();
 
     for (const mod of studentModules) {
-      // @ts-ignore
-      const studentId = mod.student._id.toString();
+      // اعتبر student كـ any لتفادي مشكلة TS
+      const student = mod.student as any;
 
-      // Remove the `student` field to avoid duplication
-      const { student, ...moduleWithoutStudent } = mod;
+      // تحقق من أن student موجود وله _id قبل الاستخدام
+      if (!student || !student._id) continue;
+
+      const studentId = student._id.toString();
+
+      // إزالة حقل student لتفادي التكرار
+      const { student: _student, ...moduleWithoutStudent } = mod;
 
       if (!modulesMap.has(studentId)) {
         modulesMap.set(studentId, []);
@@ -39,15 +44,13 @@ export class StudentService {
       modulesMap.get(studentId)?.push(moduleWithoutStudent);
     }
 
-    const result = students.map((student) => {
+    return students.map((student) => {
       const studentId = student._id.toString();
       return {
         ...student,
         modules: modulesMap.get(studentId) || [],
       };
     });
-
-    return result;
   }
 
   async findById(id: string) {
@@ -57,22 +60,26 @@ export class StudentService {
   async create(data: StudentDto) {
     const { modules, ...studentData } = data;
 
-    // Create and save the student
     const student = new this.studentModel(studentData);
     await student.save();
 
-    // Create and save all modules
+    const studentId = new Types.ObjectId(student._id + '');
+
     const modulePromises = modules.map((moduleId) => {
-      this.studentModuleService.create({
-        student: new Types.ObjectId(student._id + ''),
-        module: new Types.ObjectId(moduleId + ''),
-        Practical: new Types.ObjectId(''),
+      if (!Types.ObjectId.isValid(moduleId)) {
+        throw new Error(`Invalid moduleId: ${moduleId}`);
+      }
+
+      return this.studentModuleService.create({
+        student: studentId,
+        module: new Types.ObjectId(moduleId),
+        // Uncomment only if you have a valid practicalId
+        // Practical: practicalId ? new Types.ObjectId(practicalId) : undefined,
       });
     });
 
     await Promise.all(modulePromises);
-
-    return student; // Return the created student
+    return student;
   }
 
   async update(id: string, data: StudentDto) {

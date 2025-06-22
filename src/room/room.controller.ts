@@ -25,12 +25,12 @@ export class RoomController {
     return this.roomService.findAll();
   }
 
-////////////
+  ////////////
   @Get('infogenerate')
   infogenrate() {
-    return this.roomService.infogenrate();
+    return this.roomService.infogenerate();
   }
-///////////////////////////////
+  ///////////////////////////////
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.roomService.findOne(id);

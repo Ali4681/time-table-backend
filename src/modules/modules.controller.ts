@@ -42,6 +42,10 @@ export class ModuleController {
   findById(@Param('id') id: string) {
     return this.moduleService.findById(id);
   }
+  @Get(':code/modulebycode')
+  findByCode(@Param('code') code: string) {
+    return this.moduleService.findByCode(code);
+  }
   @Get(':id/withInfo')
   findAllModuleWithDoctorATeacher(@Param('id') id: string) {
     return this.moduleService.findModuleWithDoctorATeacher(id);

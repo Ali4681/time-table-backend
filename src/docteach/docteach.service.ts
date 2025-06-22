@@ -88,8 +88,26 @@ export class DocTeachService {
       .exec();
     if (!updated) throw new NotFoundException('DocTeach not found');
 
-    const response = await this.docHourModel.find().populate('hourId docId');
-    return response;
+    // Handle hour updates if hourIds are provided
+    if (dto.hourIds) {
+      // First, remove all existing hour associations for this doctor
+      await this.docHourModel.deleteMany({ docId: id }).exec();
+
+      // Then create new associations for each hourId in the dto
+      if (dto.hourIds.length > 0) {
+        await Promise.all(
+          dto.hourIds.map((hourId) =>
+            new this.docHourModel({
+              docId: id,
+              hourId: new Types.ObjectId(hourId),
+            }).save(),
+          ),
+        );
+      }
+    }
+
+    // Return the updated doctor with populated hours
+    return this.findOne(id);
   }
 
   async remove(id: string) {

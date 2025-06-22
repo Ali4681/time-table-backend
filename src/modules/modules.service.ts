@@ -52,6 +52,9 @@ export class ModuleService {
   async findById(id: string) {
     return this.moduleModel.findById(id);
   }
+  async findByCode(code: string) {
+    return this.moduleModel.findOne({code:code});
+  }
 
   async update(id: string, data: ModuleDto) {
     return this.moduleModel
