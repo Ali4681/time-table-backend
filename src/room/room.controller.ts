@@ -13,7 +13,7 @@ import { RoomService } from './room.service';
 
 @Controller('room')
 export class RoomController {
-  constructor(private readonly roomService: RoomService) {}
+  constructor(private readonly roomService: RoomService) { }
 
   @Post()
   create(@Body() createRoomDto: RoomDto) {
@@ -29,6 +29,11 @@ export class RoomController {
   @Get('infogenerate')
   infogenrate() {
     return this.roomService.infogenerate();
+  }
+
+  @Get('infogenerate-test')
+  infogenrateTest() {
+    return this.roomService.infogenerateTest();
   }
   ///////////////////////////////
   @Get(':id')
