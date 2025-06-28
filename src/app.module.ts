@@ -10,14 +10,18 @@ import { TheoreticalModule } from './theoretical/theoretical.module';
 import { ModulesModule } from './modules/modules.module';
 import { DaysModule } from './days/days.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
     MongooseModule.forRoot(
-      'mongodb://localhost/time-table',
-      //  'mongodb+srv://ali468:aaa123aaa@cluster0.dsejjf7.mongodb.net/time-table',
+      // 'mongodb://localhost/time-table',
+      'mongodb+srv://ali468:aaa123aaa@cluster0.dsejjf7.mongodb.net/time-table-database',
     ),
     DocTeachModule,
+    UserModule,
+    AuthModule,
     HoursModule,
     ModulesModule,
     PracticalModule,
