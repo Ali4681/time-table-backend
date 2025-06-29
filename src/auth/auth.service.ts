@@ -13,11 +13,8 @@ export class AuthService {
   ) {}
 
   async signUp(dto: UserDto) {
-    const hashed = bcrypt.hashSync(dto.password, 10);
-    const user = await this.userService.createUser({
-      ...dto,
-      password: hashed,
-    });
+    const user = await this.userService.createUser(dto);
+
     return { status: true, message: 'User created successfully', user };
   }
 
@@ -31,6 +28,7 @@ export class AuthService {
       id: String(user._id),
       email: user.email,
       username: user.fullName,
+      phoneNumber: user.phoneNumber, // <-- Added this line
     };
 
     return { token: this.jwtService.sign(payload), user };

@@ -15,4 +15,6 @@ export class payloadDto {
   @IsString()
   username: string;
 
+  @IsString()
+  phoneNumber: string;
 }

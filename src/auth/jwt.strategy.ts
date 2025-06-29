@@ -21,6 +21,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       id: String(user._id),
       email: user.email,
       username: user.fullName,
+      phoneNumber: user.phoneNumber,
     };
   }
 }
