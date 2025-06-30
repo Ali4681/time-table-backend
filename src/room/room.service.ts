@@ -71,7 +71,7 @@ export class RoomService {
       // 2. Prepare schedule parameters
       const scheduleParameters = {
         days: days.map((d) => d.name),
-        time_slots: hours.map((h) => h.value),
+        time_slots: [... new Set(hours.map((h) => h.value))],
         practical_sessions_per_theoretical: 1,
       };
 
@@ -169,6 +169,10 @@ export class RoomService {
         );
         const teacherName = teacher ? teacher.name : 'Unknown';
 
+
+
+        console.log("module enrolled studetns : ", module.erolledStudents || 0);
+
         return {
           module_id: module.name, // Internal reference
           module_code: module.code,
@@ -204,10 +208,11 @@ export class RoomService {
         schedule_parameters: scheduleParameters,
         rooms: roomList,
         teachers: teacherList,
-        students: updatedStudents,
-        modules: splitModules,
-        optimizationMode: 'feasible',
-        splittingReport: splittingReport,
+        students: studentList,
+        modules: moduleList,
+        // modules: splitModules,
+        // optimizationMode: 'feasible',
+        // splittingReport: splittingReport,
       };
 
       console.log(`📊 Final data summary:
@@ -219,7 +224,7 @@ export class RoomService {
 
       // 10. Make API call to Enhanced Production Flask solver
       const response = await axios.post(
-        'http://localhost:5001/solve-enhanced', // Use enhanced production endpoint
+        'http://localhost:5000/schedule',
         scheduleData,
       );
 
@@ -244,6 +249,7 @@ export class RoomService {
       throw error;
     }
   }
+
   async infogenerateTest(): Promise<any> {
 
     try {
@@ -258,7 +264,7 @@ export class RoomService {
       // 2. Prepare schedule parameters
       const scheduleParameters = {
         days: days.map((d) => d.name),
-        time_slots: hours.map((h) => h.value),
+        time_slots: [... new Set(hours.map((h) => h.value))],
         practical_sessions_per_theoretical: 1,
       };
 
@@ -318,7 +324,6 @@ export class RoomService {
           }
 
           uniqueTeachers.set(teacher.name, {
-            teacher_id: teacher._id.toString(),
             teacher_name: teacher.name,
             availability,
           });
@@ -360,9 +365,7 @@ export class RoomService {
           module_id: module.name, // Internal reference
           module_code: module.code,
           module_name: module.name, // Module name for display
-          teacher_id: teacher ? teacher._id.toString() : 'unknown',
           teacher_name: teacherName,
-          doctor_id: doctors ? doctors._id.toString() : 'unknown',
           doctor_name: doctorName,
           type: module.years.length > 1 ? 'elective' : 'core',
           enrollment: module.erolledStudents || 0,
@@ -374,34 +377,26 @@ export class RoomService {
 
       // 7. Apply module splitting based on capacity constraints
       console.log('🔧 Starting module splitting preprocessing...');
-      const { splitModules, splittingReport } = await this.moduleService.splitModulesByCapacity(
-        moduleList,
-        studentList
-      );
+      // const { splitModules, splittingReport } = await this.moduleService.splitModulesByCapacity(
+      //   moduleList,
+      //   studentList
+      // );
 
-      // 8. Update student enrollments to match split modules
-      const updatedStudents = this.moduleService.updateStudentEnrollmentsForSplitModules(
-        studentList,
-        splitModules,
-        splittingReport
-      );
+
 
       // 9. Combine all data into the final structure with split modules
       const scheduleData = {
         schedule_parameters: scheduleParameters,
         rooms: roomList,
         teachers: teacherList,
-        students: updatedStudents,
-        modules: splitModules,
-        optimizationMode: 'feasible',
-        splittingReport: splittingReport,
+        students: studentList,
+        modules: moduleList.map((item) => {
+          const { type, theoretical_sessions, practical_sessions_per_theoretical, ...rest } = item
+          return rest
+        }),
+        // optimizationMode: 'feasible',
+        // splittingReport: splittingReport,
       };
-
-      console.log(`📊 Final data summary:
-      - Original modules: ${moduleList.length}
-      - Split modules: ${splitModules.length}
-      - Students updated: ${updatedStudents.length}
-      - Splitting report: ${splittingReport.totalModulesSplit} modules split`);
 
       return scheduleData;
     } catch (error) {

@@ -19,6 +19,7 @@ import {
 } from '../student/student.schema';
 import { DocHourSchema, DocHourType } from 'src/docteach/doc-hour.schema';
 import { StudentModuleType, StudentModuleTypeSchema } from 'src/studentmodule/studentmodule.schema';
+import { ModulesModule } from '../modules/modules.module';
 
 @Module({
   imports: [
@@ -32,8 +33,9 @@ import { StudentModuleType, StudentModuleTypeSchema } from 'src/studentmodule/st
       { name: DocHourType.name, schema: DocHourSchema },
       { name: StudentModuleType.name, schema: StudentModuleTypeSchema },
     ]),
+    ModulesModule, // Import ModulesModule to access ModuleService
   ],
   controllers: [RoomController],
   providers: [RoomService],
 })
-export class RoomModule {}
+export class RoomModule { }

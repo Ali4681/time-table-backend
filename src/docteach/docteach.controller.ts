@@ -14,7 +14,7 @@ import { isValidObjectId } from 'mongoose'; // or from 'mongodb' if not using Mo
 
 @Controller('doc-teach')
 export class DocTeachController {
-  constructor(private readonly docTeachService: DocTeachService) {}
+  constructor(private readonly docTeachService: DocTeachService) { }
 
   @Post()
   create(@Body() dto: DocTeachDto) {

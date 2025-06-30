@@ -22,5 +22,6 @@ import { LinkToRoomModule } from './linkToRoom.module';
   ],
   controllers: [ModuleController],
   providers: [ModuleService],
+  exports: [ModuleService], // Export ModuleService so it can be used in other modules
 })
-export class ModulesModule {}
+export class ModulesModule { }
