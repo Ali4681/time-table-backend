@@ -3,7 +3,7 @@ import {
   IsNotEmpty,
   IsNumber,
   IsString,
-  Min
+  Min,
 } from 'class-validator';
 
 export class RoomDto {
