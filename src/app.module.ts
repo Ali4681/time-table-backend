@@ -17,13 +17,7 @@ import { AppService } from './app.service';
 @Module({
   imports: [
     MongooseModule.forRoot(
-<<<<<<< HEAD
-      // 'mongodb://localhost/time-table',
-      // 'mongodb+srv://ali468:aaa123aaa@cluster0.dsejjf7.mongodb.net/time-table',
-      "mongodb+srv://ali468:aaa123aaa@cluster0.dsejjf7.mongodb.net/time-table-database"
-=======
       'mongodb+srv://ali468:aaa123aaa@cluster0.dsejjf7.mongodb.net/time-table-database',
->>>>>>> f0da2f699c08fc7d2b80f2becfd3e5570170be5c
     ),
     UserModule,
     AuthModule,
