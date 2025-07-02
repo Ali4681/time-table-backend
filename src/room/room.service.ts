@@ -24,9 +24,10 @@ export class RoomService {
     @InjectModel(DocTeachType.name) private docTeachModel: Model<DocTeachType>,
     @InjectModel(StudentType.name) private studentModel: Model<StudentType>,
     @InjectModel(DocHourType.name) private DocHourModel: Model<DocHourType>,
-    @InjectModel(StudentModuleType.name) private studentModuleModel: Model<StudentModuleType>,
+    @InjectModel(StudentModuleType.name)
+    private studentModuleModel: Model<StudentModuleType>,
     private moduleService: ModuleService,
-  ) { }
+  ) {}
 
   async create(createRoomDto: RoomDto): Promise<RoomType> {
     const newRoom = new this.roomModel(createRoomDto);
@@ -71,7 +72,7 @@ export class RoomService {
       // 2. Prepare schedule parameters
       const scheduleParameters = {
         days: days.map((d) => d.name),
-        time_slots: [... new Set(hours.map((h) => h.value))],
+        time_slots: [...new Set(hours.map((h) => h.value))],
         practical_sessions_per_theoretical: 1,
       };
 
@@ -169,9 +170,7 @@ export class RoomService {
         );
         const teacherName = teacher ? teacher.name : 'Unknown';
 
-
-
-        console.log("module enrolled studetns : ", module.erolledStudents || 0);
+        console.log('module enrolled studetns : ', module.erolledStudents || 0);
 
         return {
           module_id: module.name, // Internal reference
@@ -191,17 +190,19 @@ export class RoomService {
 
       // 7. Apply module splitting based on capacity constraints
       console.log('🔧 Starting module splitting preprocessing...');
-      const { splitModules, splittingReport } = await this.moduleService.splitModulesByCapacity(
-        moduleList,
-        studentList
-      );
+      const { splitModules, splittingReport } =
+        await this.moduleService.splitModulesByCapacity(
+          moduleList,
+          studentList,
+        );
 
       // 8. Update student enrollments to match split modules
-      const updatedStudents = this.moduleService.updateStudentEnrollmentsForSplitModules(
-        studentList,
-        splitModules,
-        splittingReport
-      );
+      const updatedStudents =
+        this.moduleService.updateStudentEnrollmentsForSplitModules(
+          studentList,
+          splitModules,
+          splittingReport,
+        );
 
       // 9. Combine all data into the final structure with split modules
       const scheduleData = {
@@ -220,7 +221,6 @@ export class RoomService {
       - Split modules: ${splitModules.length}
       - Students updated: ${updatedStudents.length}
       - Splitting report: ${splittingReport.totalModulesSplit} modules split`);
-
 
       // 10. Make API call to Enhanced Production Flask solver
       const response = await axios.post(
@@ -251,7 +251,6 @@ export class RoomService {
   }
 
   async infogenerateTest(): Promise<any> {
-
     try {
       // 1. Get all necessary data from database
       const days = await this.daysModel.find().lean().exec();
@@ -264,7 +263,7 @@ export class RoomService {
       // 2. Prepare schedule parameters
       const scheduleParameters = {
         days: days.map((d) => d.name),
-        time_slots: [... new Set(hours.map((h) => h.value))],
+        time_slots: [...new Set(hours.map((h) => h.value))],
         practical_sessions_per_theoretical: 1,
       };
 
@@ -382,8 +381,6 @@ export class RoomService {
       //   studentList
       // );
 
-
-
       // 9. Combine all data into the final structure with split modules
       const scheduleData = {
         schedule_parameters: scheduleParameters,
@@ -391,8 +388,13 @@ export class RoomService {
         teachers: teacherList,
         students: studentList,
         modules: moduleList.map((item) => {
-          const { type, theoretical_sessions, practical_sessions_per_theoretical, ...rest } = item
-          return rest
+          const {
+            type,
+            theoretical_sessions,
+            practical_sessions_per_theoretical,
+            ...rest
+          } = item;
+          return rest;
         }),
         // optimizationMode: 'feasible',
         // splittingReport: splittingReport,

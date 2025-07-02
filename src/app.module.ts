@@ -17,7 +17,8 @@ import { AppService } from './app.service';
 @Module({
   imports: [
     MongooseModule.forRoot(
-      'mongodb+srv://ali468:aaa123aaa@cluster0.dsejjf7.mongodb.net/time-table-database',
+      'mongodb://localhost/time-table',
+      // 'mongodb+srv://ali468:aaa123aaa@cluster0.dsejjf7.mongodb.net/time-table-database',
     ),
     UserModule,
     AuthModule,
@@ -33,4 +34,4 @@ import { AppService } from './app.service';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
