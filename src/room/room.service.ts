@@ -1,4 +1,4 @@
-// room.service.ts
+// room.service.ts - Complete Updated Version
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import axios from 'axios';
@@ -31,15 +31,15 @@ export class RoomService {
   async create(createRoomDto: RoomDto): Promise<RoomType> {
     const newRoom = new this.roomModel(createRoomDto);
     const savedRoom = await newRoom.save();
-    return savedRoom.toObject(); // Convert to plain object
+    return savedRoom.toObject();
   }
 
   async findAll(): Promise<RoomType[]> {
-    return this.roomModel.find().lean().exec(); // Add .lean()
+    return this.roomModel.find().lean().exec();
   }
 
   async findOne(id: string): Promise<RoomType> {
-    const room = await this.roomModel.findById(id).lean().exec(); // Add .lean()
+    const room = await this.roomModel.findById(id).lean().exec();
     if (!room) throw new NotFoundException('Room not found');
     return room;
   }
@@ -47,7 +47,7 @@ export class RoomService {
   async update(id: string, updateRoomDto: RoomDto): Promise<RoomType> {
     const room = await this.roomModel
       .findByIdAndUpdate(id, updateRoomDto, { new: true })
-      .lean() // Add .lean()
+      .lean()
       .exec();
     if (!room) throw new NotFoundException('Room not found');
     return room;
@@ -58,8 +58,15 @@ export class RoomService {
     if (!result) throw new NotFoundException('Room not found');
   }
 
+  /**
+   * 🎯 UNIVERSAL APPROACH: Every module gets both theoretical and practical sessions
+   * 🔬 ENHANCED LAB DISTRIBUTION: Uses all available labs efficiently
+   */
   async infogenerate() {
     try {
+      console.log('🎯 Starting Universal Practical Session Generation...');
+      console.log('🔬 Enhanced Lab Distribution enabled...');
+
       // 1. Get all necessary data from database
       const days = await this.daysModel.find().lean().exec();
       const hours = await this.hourModel.find().lean().exec();
@@ -71,11 +78,22 @@ export class RoomService {
       // 2. Prepare schedule parameters
       const scheduleParameters = {
         days: days.map((d) => d.name),
-        time_slots: [... new Set(hours.map((h) => h.value))],
+        time_slots: [...new Set(hours.map((h) => h.value))],
         practical_sessions_per_theoretical: 1,
       };
 
-      // 3. Prepare rooms data (ensure unique room IDs)
+      // 3. 🔬 Enhanced rooms data with lab specialization analysis
+      const theoreticalRooms = rooms.filter(room => room.theoretical);
+      const labRooms = rooms.filter(room => !room.theoretical);
+
+      console.log(`🏢 Room Analysis:`);
+      console.log(`   - Theoretical rooms: ${theoreticalRooms.length}`);
+      console.log(`   - Lab rooms: ${labRooms.length}`);
+
+      labRooms.forEach((lab, index) => {
+        console.log(`   - Lab ${index + 1}: ${lab.name} (capacity: ${lab.capacity})`);
+      });
+
       const roomList = rooms.map((room) => ({
         room_id: room._id.toString(),
         room_name: room.name,
@@ -87,7 +105,6 @@ export class RoomService {
       const uniqueTeachers = new Map<string, any>();
       await Promise.all(
         teachers.map(async (teacher) => {
-          // Skip if teacher already processed
           if (uniqueTeachers.has(teacher.name)) {
             return;
           }
@@ -138,10 +155,9 @@ export class RoomService {
         }),
       );
 
-      // Convert Map to array
       const teacherList = Array.from(uniqueTeachers.values());
 
-      // 5. Prepare students data
+      // 5. Prepare students data with graduation priority analysis
       const studentList = await Promise.all(
         students.map(async (student) => {
           const yearModules = modules.filter((m) =>
@@ -157,7 +173,7 @@ export class RoomService {
         }),
       );
 
-      // 6. Prepare modules data with names and unique teacher references
+      // 6. 🎯 UNIVERSAL: Prepare modules - ALL modules get practical sessions
       const moduleList = modules.map((module) => {
         const doctors = teachers.find(
           (t) => t._id.toString() === module.doctorsId.toString(),
@@ -169,73 +185,169 @@ export class RoomService {
         );
         const teacherName = teacher ? teacher.name : 'Unknown';
 
+        const enrollment = module.erolledStudents || 0;
+        const practicalSessionsExpected = enrollment > 0 ? Math.ceil(enrollment / 20) : 0;
 
+        // 🔬 Determine lab specialization preference
+        const moduleName = module.name.toLowerCase();
+        let labPreference = 'general';
 
-        console.log("module enrolled studetns : ", module.erolledStudents || 0);
+        if (moduleName.includes('اتصالات') || moduleName.includes('مقاسم') || moduleName.includes('هاتفية')) {
+          labPreference = 'communications';
+        } else if (moduleName.includes('الكترونيات') || moduleName.includes('دارات')) {
+          labPreference = 'electronics';
+        } else if (moduleName.includes('فيزياء')) {
+          labPreference = 'physics';
+        } else if (moduleName.includes('حاسوب') || moduleName.includes('برمجة') || moduleName.includes('نظم')) {
+          labPreference = 'computer';
+        } else if (moduleName.includes('شبكات')) {
+          labPreference = 'networks';
+        }
+
+        console.log(`📝 Module: ${module.name}`);
+        console.log(`   - Enrollment: ${enrollment}`);
+        console.log(`   - Expected Practical Sessions: ${practicalSessionsExpected}`);
+        console.log(`   - Lab Preference: ${labPreference}`);
+        console.log(`   - Doctor: ${doctorName}`);
+        console.log(`   - Teacher: ${teacherName}`);
 
         return {
-          module_id: module.name, // Internal reference
+          module_id: module.name,
           module_code: module.code,
-          module_name: module.name, // Module name for display
-          teacher_id: teacher ? teacher._id.toString() : 'unknown',
+          module_name: module.name,
           teacher_name: teacherName,
-          doctor_id: doctors ? doctors._id.toString() : 'unknown',
           doctor_name: doctorName,
-          type: module.years.length > 1 ? 'elective' : 'core',
-          enrollment: module.erolledStudents || 0,
+          enrollment: enrollment,
+
+          // 🎯 UNIVERSAL: Every module gets practical sessions
+          needs_practical_sessions: true,
+          practical_sessions_expected: practicalSessionsExpected,
+          lab_preference: labPreference,
+
+          // Additional metadata
+          total_hours: module.hours || 2,
           year_groups: module.years || [],
-          theoretical_sessions: Math.ceil(module.hours / 2) || 2,
-          practical_sessions_per_theoretical: module.hours > 2 ? 1 : 0,
+          subject_type: 'universal'
         };
       });
 
-      // 7. Apply module splitting based on capacity constraints
-      console.log('🔧 Starting module splitting preprocessing...');
-      const { splitModules, splittingReport } = await this.moduleService.splitModulesByCapacity(
-        moduleList,
-        studentList
-      );
+      // 7. 🎯 Comprehensive analysis and logging
+      const totalModules = moduleList.length;
+      const modulesWithStudents = moduleList.filter(m => m.enrollment > 0);
+      const totalPracticalSessions = moduleList.reduce((sum, m) => sum + m.practical_sessions_expected, 0);
 
-      // 8. Update student enrollments to match split modules
-      const updatedStudents = this.moduleService.updateStudentEnrollmentsForSplitModules(
-        studentList,
-        splitModules,
-        splittingReport
-      );
+      // Analyze lab preferences
+      const labPreferenceStats = moduleList.reduce((stats, module) => {
+        if (module.enrollment > 0) {
+          stats[module.lab_preference] = (stats[module.lab_preference] || 0) + module.practical_sessions_expected;
+        }
+        return stats;
+      }, {});
 
-      // 9. Combine all data into the final structure with split modules
+      console.log('\n🎯 UNIVERSAL PRACTICAL SESSION ANALYSIS:');
+      console.log(`📊 Total modules: ${totalModules}`);
+      console.log(`👥 Modules with students: ${modulesWithStudents.length}`);
+      console.log(`🧪 Total practical sessions expected: ${totalPracticalSessions}`);
+      console.log(`📚 ALL modules will have theoretical sessions`);
+      console.log(`🔬 ALL modules (with students) will have practical sessions`);
+
+      console.log('\n🔬 LAB SPECIALIZATION REQUIREMENTS:');
+      Object.entries(labPreferenceStats).forEach(([preference, sessions]) => {
+        console.log(`   - ${preference}: ${sessions} practical sessions`);
+      });
+
+      console.log('\n📋 DETAILED MODULE BREAKDOWN:');
+      moduleList.forEach(m => {
+        if (m.enrollment > 0) {
+          console.log(`   ✅ ${m.module_name}: ${m.enrollment} students → ${m.practical_sessions_expected} practical sessions (${m.lab_preference} lab)`);
+        } else {
+          console.log(`   ⚪ ${m.module_name}: 0 students → no sessions generated`);
+        }
+      });
+
+      // 8. 🔬 Enhanced lab capacity validation
+      const totalLabCapacity = labRooms.length * scheduleParameters.days.length * scheduleParameters.time_slots.length;
+      const labUtilizationPrediction = totalPracticalSessions / totalLabCapacity * 100;
+
+      console.log('\n🔬 LAB CAPACITY ANALYSIS:');
+      console.log(`   - Available labs: ${labRooms.length}`);
+      console.log(`   - Time slots per week: ${scheduleParameters.days.length * scheduleParameters.time_slots.length}`);
+      console.log(`   - Total lab capacity: ${totalLabCapacity} sessions/week`);
+      console.log(`   - Required practical sessions: ${totalPracticalSessions}`);
+      console.log(`   - Predicted lab utilization: ${labUtilizationPrediction.toFixed(1)}%`);
+
+      if (labUtilizationPrediction > 80) {
+        console.log('   ⚠️ WARNING: High lab utilization predicted - may need more labs or time slots');
+      } else if (labUtilizationPrediction < 30) {
+        console.log('   ✅ GOOD: Low lab utilization - plenty of capacity available');
+      } else {
+        console.log('   ✅ OPTIMAL: Moderate lab utilization - good balance');
+      }
+
+      // 9. Combine all data into the final structure
       const scheduleData = {
         schedule_parameters: scheduleParameters,
         rooms: roomList,
         teachers: teacherList,
         students: studentList,
         modules: moduleList,
-        // modules: splitModules,
-        // optimizationMode: 'feasible',
-        // splittingReport: splittingReport,
+
+        // 🎯 Enhanced metadata
+        scheduling_approach: {
+          type: 'universal',
+          description: 'Every module gets both theoretical and practical sessions',
+          practical_generation: 'automatic_for_all_modules',
+          lab_capacity: 20,
+          lab_distribution: 'enhanced_with_specialization',
+          graduation_priority: true
+        },
+
+        // 🔬 Lab analysis metadata
+        lab_analysis: {
+          total_labs: labRooms.length,
+          lab_specializations: labPreferenceStats,
+          predicted_utilization: labUtilizationPrediction,
+          capacity_status: labUtilizationPrediction > 80 ? 'high' : labUtilizationPrediction < 30 ? 'low' : 'optimal'
+        }
       };
 
-      console.log(`📊 Final data summary:
-      - Original modules: ${moduleList.length}
-      - Split modules: ${splitModules.length}
-      - Students updated: ${updatedStudents.length}
-      - Splitting report: ${splittingReport.totalModulesSplit} modules split`);
+      console.log(`\n📊 FINAL DATA SUMMARY:`);
+      console.log(`      - Modules: ${moduleList.length}`);
+      console.log(`      - Students: ${studentList.length}`);
+      console.log(`      - Teachers: ${teacherList.length}`);
+      console.log(`      - Rooms: ${roomList.length} (${theoreticalRooms.length} theoretical, ${labRooms.length} lab)`);
+      console.log(`      - Expected practical sessions: ${totalPracticalSessions}`);
+      console.log(`      - Approach: Universal (all modules get practical sessions)`);
+      console.log(`      - Lab distribution: Enhanced with specialization matching`);
+      console.log(`      - Graduation priority: Enabled for final year students\n`);
 
-
-      // 10. Make API call to Enhanced Production Flask solver
+      // 10. 🚀 Make API call to Enhanced Production Flask solver
+      console.log('🚀 Sending data to Enhanced Flask Scheduler...');
       const response = await axios.post(
         'http://localhost:5000/schedule',
         scheduleData,
       );
 
+      console.log(`✅ Flask Scheduler Response: ${response.status} ${response.statusText}`);
+
       return {
         success: true,
-        data: response.data,
+        data: response.data.data,
         status: response.status,
         statusText: response.statusText,
+        practical_analysis: {
+          approach: 'universal',
+          total_modules: totalModules,
+          modules_with_students: modulesWithStudents.length,
+          total_practical_sessions_expected: totalPracticalSessions,
+          all_modules_get_practical: true,
+          lab_utilization_prediction: labUtilizationPrediction,
+          lab_specializations: labPreferenceStats
+        }
       };
+
     } catch (error) {
-      console.error('Error sending data to scheduling service:', error);
+      console.error('❌ Error sending data to scheduling service:', error);
 
       if (axios.isAxiosError(error)) {
         return {
@@ -250,10 +362,12 @@ export class RoomService {
     }
   }
 
+  /**
+   * 🧪 Test version of infogenerate - returns data without API call
+   */
   async infogenerateTest(): Promise<any> {
-
     try {
-      // 1. Get all necessary data from database
+      // Get all necessary data from database
       const days = await this.daysModel.find().lean().exec();
       const hours = await this.hourModel.find().lean().exec();
       const modules = await this.moduleModel.find().lean().exec();
@@ -261,14 +375,14 @@ export class RoomService {
       const teachers = await this.docTeachModel.find().lean().exec();
       const students = await this.studentModel.find().lean().exec();
 
-      // 2. Prepare schedule parameters
+      // Prepare schedule parameters
       const scheduleParameters = {
         days: days.map((d) => d.name),
-        time_slots: [... new Set(hours.map((h) => h.value))],
+        time_slots: [...new Set(hours.map((h) => h.value))],
         practical_sessions_per_theoretical: 1,
       };
 
-      // 3. Prepare rooms data (ensure unique room IDs)
+      // Prepare rooms data
       const roomList = rooms.map((room) => ({
         room_id: room._id.toString(),
         room_name: room.name,
@@ -276,11 +390,10 @@ export class RoomService {
         type: room.theoretical ? 'theoretical' : 'lab',
       }));
 
-      // 4. Prepare teachers data with unique IDs and availability
+      // Prepare teachers data
       const uniqueTeachers = new Map<string, any>();
       await Promise.all(
         teachers.map(async (teacher) => {
-          // Skip if teacher already processed
           if (uniqueTeachers.has(teacher.name)) {
             return;
           }
@@ -289,7 +402,6 @@ export class RoomService {
             .lean()
             .exec();
 
-          // Initialize availability structure
           const availability = {};
           scheduleParameters.days.forEach((day) => {
             availability[day] = {};
@@ -298,7 +410,6 @@ export class RoomService {
             });
           });
 
-          // Set available slots
           for (const docHour of docHours) {
             const hour = await this.hourModel
               .findById(docHour.hourId)
@@ -330,10 +441,9 @@ export class RoomService {
         }),
       );
 
-      // Convert Map to array
       const teacherList = Array.from(uniqueTeachers.values());
 
-      // 5. Prepare students data
+      // Prepare students data
       const studentList = await Promise.all(
         students.map(async (student) => {
           const yearModules = modules.filter((m) =>
@@ -349,7 +459,7 @@ export class RoomService {
         }),
       );
 
-      // 6. Prepare modules data with names and unique teacher references
+      // 🎯 UNIVERSAL: Prepare modules - ALL modules get practical sessions
       const moduleList = modules.map((module) => {
         const doctors = teachers.find(
           (t) => t._id.toString() === module.doctorsId.toString(),
@@ -362,45 +472,35 @@ export class RoomService {
         const teacherName = teacher ? teacher.name : 'Unknown';
 
         return {
-          module_id: module.name, // Internal reference
+          module_id: module.name,
           module_code: module.code,
-          module_name: module.name, // Module name for display
+          module_name: module.name,
           teacher_name: teacherName,
           doctor_name: doctorName,
-          type: module.years.length > 1 ? 'elective' : 'core',
           enrollment: module.erolledStudents || 0,
-          year_groups: module.years || [],
-          theoretical_sessions: Math.ceil(module.hours / 2) || 2,
-          practical_sessions_per_theoretical: module.hours > 2 ? 1 : 0,
+
+          // 🎯 UNIVERSAL: Every module gets practical sessions
+          needs_practical_sessions: true,
+          subject_type: 'universal'
         };
       });
 
-      // 7. Apply module splitting based on capacity constraints
-      console.log('🔧 Starting module splitting preprocessing...');
-      // const { splitModules, splittingReport } = await this.moduleService.splitModulesByCapacity(
-      //   moduleList,
-      //   studentList
-      // );
-
-
-
-      // 9. Combine all data into the final structure with split modules
+      // Return test data structure
       const scheduleData = {
         schedule_parameters: scheduleParameters,
         rooms: roomList,
         teachers: teacherList,
         students: studentList,
-        modules: moduleList.map((item) => {
-          const { type, theoretical_sessions, practical_sessions_per_theoretical, ...rest } = item
-          return rest
-        }),
-        // optimizationMode: 'feasible',
-        // splittingReport: splittingReport,
+        modules: moduleList,
+        scheduling_approach: {
+          type: 'universal',
+          description: 'Every module gets both theoretical and practical sessions'
+        }
       };
 
       return scheduleData;
     } catch (error) {
-      console.error('Error sending data to scheduling service:', error);
+      console.error('❌ Error preparing test data:', error);
       throw error;
     }
   }
