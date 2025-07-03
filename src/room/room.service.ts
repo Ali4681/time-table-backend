@@ -24,7 +24,8 @@ export class RoomService {
     @InjectModel(DocTeachType.name) private docTeachModel: Model<DocTeachType>,
     @InjectModel(StudentType.name) private studentModel: Model<StudentType>,
     @InjectModel(DocHourType.name) private DocHourModel: Model<DocHourType>,
-    @InjectModel(StudentModuleType.name) private studentModuleModel: Model<StudentModuleType>,
+    @InjectModel(StudentModuleType.name)
+    private studentModuleModel: Model<StudentModuleType>,
     private moduleService: ModuleService,
   ) { }
 
@@ -78,6 +79,7 @@ export class RoomService {
       // 2. Prepare schedule parameters
       const scheduleParameters = {
         days: days.map((d) => d.name),
+        time_slots: [...new Set(hours.map((h) => h.value))],
         time_slots: [...new Set(hours.map((h) => h.value))],
         practical_sessions_per_theoretical: 1,
       };
@@ -378,6 +380,7 @@ export class RoomService {
       // Prepare schedule parameters
       const scheduleParameters = {
         days: days.map((d) => d.name),
+        time_slots: [...new Set(hours.map((h) => h.value))],
         time_slots: [...new Set(hours.map((h) => h.value))],
         practical_sessions_per_theoretical: 1,
       };
